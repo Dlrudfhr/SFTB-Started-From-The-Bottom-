@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script
+      src="https://kit.fontawesome.com/def66b134a.js"
+      crossorigin="anonymous"
+    ></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--웹 페이지가 모바일 기기에서 어떻게 보여질지를 제어하는 HTML 메타 태그-->
+    <style>
+      body {
+        height: 100vh; /* 화면 높이의 100%로 설정 */
+        margin: 0; /* 기본 마진 제거 */
+        padding: 0; /* 기본 패딩 제거 */
+        position: relative; /* 부모 요소로서의 위치 설정 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: url("../html/image/ccc.jpg") no-repeat center; /* ccc.jpg를 배경으로 설정 */
+        background-size: cover; /* 배경 이미지를 화면에 맞게 조정 */
+      }
+      body::after {
+        content: ""; /* 가상 요소에 내용 없음 */
+        position: absolute; /* 절대 위치로 설정 */
+        top: 0;
+        left: 0;
+        width: 100%; /* 부모 요소(body)의 너비 */
+        height: 100%; /* 부모 요소(body)의 높이 */
+        background-image: url("../html/image/rogo.png"); /* 정통.png를 배경 이미지로 설정 */
+        background-size: 80px 80px; /* 이미지를 요소에 맞게 조정 */
+        background-position: top 1% left 38%; /* 이미지를 중앙 정렬 */
+        background-repeat: no-repeat; /* 이미지 반복 없음 */
+        z-index: 1; /* 배경 이미지 위에 표시하기 위해 z-index 설정 */
+      }
+      .text-on-image {
+        position: absolute; /* 절대 위치로 설정 */
+        top: 3%; /* 부모 요소 중앙에서 상단으로부터 50% 위치 */
+        left: 41%; /* 부모 요소 중앙에서 오른쪽으로부터 250px 위치 */
+        font-size: 33px; /* 글자 크기 설정 */
+        color: white; /* 글자 색상 설정 */
+        z-index: 2; /* 이미지 위에 글자가 나타나도록 설정 */
+      }
+
+      .modal-wrap {
+        /* 모달 팝업을 감쌀 박스의 css부분 */
+        display: none;
+        position: fixed;
+        justify-content: center;
+        align-items: center;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.3);
+        padding: 15px;
+        z-index: 4;
+      }
+      .modal {
+        /*모달 팝업의 몸체 css*/
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-image: url("../html/image/ccc.jpg"); /* 여기에 원하는 이미지 경로를 넣으세요 */
+        background-size: cover; /* 이미지를 컨테이너 크기에 맞게 조정 */
+        background-position: center; /* 이미지를 중앙에 위치 */
+        background-repeat: no-repeat; /* 이미지를 반복하지 않음 */
+        box-shadow: 5px 10px 10px 1px rgba(0, 0, 0, 3);
+        padding: 10px;
+        width: 1100px;
+        height: 800px;
+        overflow: hidden;
+        border-radius: 10px;
+      }
+
+      .modal-head {
+        /*모달 팝업의 머리부분 css*/
+        width: 100%;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        position: relative; /* 상대 위치 지정 */
+        flex-direction: column; /* 세로 방향으로 요소 정렬 */
+        background-color: transparent; /* 투명 배경 */
+        background-image: url("../html/image/rogo.png"); /* 여기에 원하는 이미지 경로를 넣으세요 */
+        background-size: 66px 66px;
+        background-position: top 1% left 35%;
+        background-repeat: no-repeat; /* 이미지를 반복하지 않음 */
+      }
+      .modal-title {
+        align-self: flex-start; /* 위쪽에 정렬 */
+        font-size: 24px; /* 원하는 제목 글꼴 크기 */
+        color: #ffffff; /* 제목 글꼴 색상 */
+      }
+      .modal-body {
+        /*몸통*/
+        width: 1200px;
+        height: 650px;
+        background-color: transparent; /* 투명 배경 */
+      }
+      .body-content {
+        /*몸통 내부의 컨텐츠 영역*/
+        width: 100%;
+        /*좌우에 내용이 붙으면 보기 안좋기에 간격 띄움*/
+      }
+      .body-titlebox {
+        /*컨텐츠 타이틀 영역*/
+        text-align: center; /*제목 중앙정렬*/
+        width: 100%;
+        height: 40px;
+        margin-bottom: 10px;
+        /*내용과 간격 조정*/
+      }
+      .body-contentbox {
+        text-align: center; /* 폼 요소들 가운데 정렬 */
+        margin: 20px; /* 내용과 모달 경계 사이 여백 설정 */
+        padding-top: 150px; /* 폼 요소들을 아래로 내리는 여백 설정 */
+      }
+
+      .body-contentbox form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .body-contentbox label {
+        text-align: left; /* 라벨 텍스트를 왼쪽 정렬 */
+        display: block; /* 블록 요소로 변환하여 한 줄에 하나씩 표시 */
+        margin-bottom: 5px; /* 라벨 사이 여백 추가 */
+        width: 32%; /* 라벨의 너비를 조정하여 가로 폭을 맞춤 */
+      }
+      .body-contentbox input {
+        width: 30%;
+        margin: 5px 0;
+        padding: 10px; /* 내부 여백 설정 */
+        text-align: left; /* 입력 상자 내용 왼쪽 정렬 */
+      }
+      .modal-foot {
+        /*다리부분*/
+        width: 100%;
+        height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: transparent; /* 투명 배경 */
+      }
+      .modal-btn {
+        /*각각의 버튼*/
+        display: inline-flex;
+        width: 25%;
+        height: 50px;
+        justify-content: center;
+        align-items: center;
+        float: left;
+        color: #1000f1;
+        cursor: pointer;
+        text-align: center;
+        border: 2px solid #ffffff; /* 버튼 테두리 추가 */
+        box-sizing: border-box; /* 테두리가 전체 크기에 포함되도록 설정 */
+        position: relative;
+        top: -100px; /* 위로 이동할 픽셀 수 */
+        margin-right: 10px; /* 로그인 버튼과 회원가입 버튼 사이의 간격을 조정합니다 */
+      }
+
+      .modal-btn:hover {
+        background-color: #555;
+      }
+
+      .modal-btn.login {
+        border-right: 10px solid #ffffff; /* 기준 선 추가 */
+        margin-right: 5px;
+        z-index: 1;
+      }
+
+      #mainlogin {
+        z-index: 3;
+        position: absolute; /* 절대 위치로 설정 */
+        top: 10%; /* 부모 요소 중앙에서 상단으로부터 50% 위치 */
+        left: 80%; /* 부모 요소 중앙에서 오른쪽으로부터 250px 위치 */
+        font-size: 30px;
+      }
+
+      .close {
+        /*닫기 버튼*/
+        color: #fc0000;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-left: auto;
+        position: absolute; /* 절대 위치 지정 */
+        right: 15px; /* 원하는 위치로 조정 */
+        top: 15px; /* 원하는 위치로 조정 */
+      }
+      .head-title {
+        position: absolute; /* 절대 위치로 설정 */
+        top: 33%; /* 부모 요소 중앙에서 상단으로부터 50% 위치 */
+        left: 39%; /* 부모 요소 중앙에서 오른쪽으로부터 250px 위치 */
+      }
+    </style>
+  </head>
+  <body>
+    <button id="mainlogin">로그인</button>
+    <div class="text-on-image">Started From The Bottom</div>
+    <div class="container">
+      <!--컨테이너-->
+      <div class="modal-wrap" id="modal">
+        <!--모달을 감쌀 박스-->
+        <div class="modal">
+          <!--실질적 모달 팝업창-->
+          <div class="modal-head">
+            <!--로고 영역 제목과비슷한느낌-->
+            <h2><span class="head-title">Started From The Bottom</span></h2>
+            <span class="close" title="닫기">&times;</span>
+          </div>
+          <div class="modal-body">
+            <!--로그인정보입력-->
+            <div class="body-content">
+              <div class="body-contentbox">
+                <form>
+                  <label for="username">아이디 :</label>
+                  <input type="text" id="username" name="username" /><br />
+                  <label for="password">비밀번호 :</label>
+                  <input type="password" id="password" name="password" /><br />
+                  <label for="studentid">학번 :</label>
+                  <input type="text" id="studentid" name="학번" /><br />
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="modal-foot">
+            <!--로그인,회원가입 영역-->
+            <span class="modal-btn" id="login">로그인</span>
+            <span class="modal-btn" id="signup">회원가입</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-wrap" id="signupModal">
+        <!--모달을 감쌀 박스-->
+        <div class="modal">
+          <!--실질적 모달 팝업창-->
+          <div class="modal-head">
+            <!--로고 영역 제목과비슷한느낌-->
+            <h2><span class="head-title">Started From The Bottom</span></h2>
+            <span class="close" title="닫기">&times;</span>
+          </div>
+          <div class="modal-body">
+            <!--회원가입정보입력-->
+            <div class="body-content">
+              <div class="body-contentbox">
+                <form>
+                  <label for="username">아이디</label>
+                  <input type="text" id="username" name="username" /><br />
+                  <label for="password">비밀번호</label>
+                  <input type="password" id="password" name="password" /><br />
+                  <label for="studentid">학번</label>
+                  <input type="text" id="studentid" name="학번" /><br />
+                  <label for="PhoneNumber">전화번호</label>
+                  <input type="text" id="PhoneNumber" name="전화번호" /><br />
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="modal-foot">
+            <!--회원가입 모달창-->
+            <span class="modal-btn" id="signupComplete">회원가입 완료</span>
+            <span class="modal-btn" id="login2">로그인</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      window.onload = function () {
+        var loginButton = document.getElementById("mainlogin");
+        var modal = document.getElementById("modal");
+        var closeBtns = document.getElementsByClassName("close");
+        var signupButton = document.getElementById("signup");
+        var signupModal = document.getElementById("signupModal");
+        var signupComplete = document.getElementById("signupComplete");
+        var login2 = document.getElementById("login2");
+
+        loginButton.addEventListener("click", function () {
+          modal.style.display = "flex";
+          signupModal.style.display = "none";
+        });
+
+        signupButton.addEventListener("click", function () {
+          signupModal.style.display = "flex";
+          modal.style.display = "none";
+        });
+        login2.addEventListener("click", function () {
+          modal.style.display = "flex";
+          signupModal.style.display = "none";
+        });
+
+        signupComplete.addEventListener("click", function () {
+          alert("회원가입이 성공적으로 완료되었습니다");
+          setTimeout(function () {
+            modal.style.display = "flex";
+            signupModal.style.display = "none";
+          }, 0);
+        });
+
+        for (var i = 0; i < closeBtns.length; i++) {
+          closeBtns[i].onclick = function () {
+            this.parentElement.parentElement.parentElement.style.display =
+              "none";
+          };
+        }
+      };
+    </script>
+  </body>
+</html>
